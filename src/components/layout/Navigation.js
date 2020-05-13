@@ -1,5 +1,6 @@
 import React from 'react';
-import { Navbar } from 'react-bootstrap';
+import { Nav, Navbar } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
 
 const Navigation = () => (
   <Navbar expand="lg">
@@ -8,6 +9,13 @@ const Navigation = () => (
         <i className="fab fa-github"></i> Cat API
       </h1>
     </Navbar.Brand>
+    <Navbar.Toggle aria-controls="basic-navbar-nav" />
+    <Navbar.Collapse id="basic-navbar-nav">
+      <Nav className="ml-auto">
+        <Link to="/">Home</Link>
+        <Link to="/about">About</Link>
+      </Nav>
+    </Navbar.Collapse>
   </Navbar>
 );
 

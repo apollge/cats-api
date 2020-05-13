@@ -1,79 +1,35 @@
-import axios from 'axios';
-import debounce from 'lodash/debounce';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Container } from 'react-bootstrap';
-import AsyncSelect from 'react-select/async';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
-import Cats from './components/cats/Cats';
+import About from './components/pages/About';
+import Cat from './components/cats/Cat';
+import CatState from './context/cat/CatState';
+import Home from './components/pages/Home';
 import Navigation from './components/layout/Navigation';
-import Spinner from './components/layout/Spinner';
+import NotFound from './components/pages/NotFound';
 
 const App = () => {
-  const [breeds, setBreeds] = useState([]);
-  const [cats, setCats] = useState();
-  const [loading, setLoading] = useState(false);
-
-  const filterBreeds = (inputValue) => {
-    return breeds.filter((breed) =>
-      breed.name.toLowerCase().includes(inputValue.toLowerCase())
-    );
-  };
-
-  const getBreeds = async () => {
-    setLoading(true);
-
-    const res = await axios.get('https://api.thecatapi.com/v1/breeds');
-    setBreeds(res.data);
-
-    setLoading(false);
-  };
-
-  const handleInputChange = async (inputValue) => {
-    if (!inputValue) {
-      return;
-    }
-
-    setLoading(true);
-
-    const cats = await axios.get(
-      `https://api.thecatapi.com/v1/images/search?page=3&limit=10&breed_id=${inputValue.id}`
-    );
-    setCats(cats);
-
-    setLoading(false);
-  };
-
-  const loadOptions = debounce((inputValue, callback) => {
-    callback(filterBreeds(inputValue));
-  }, 420);
-
-  useEffect(() => {
-    getBreeds();
-  }, []);
-
   return (
-    <div className="App">
-      <Container>
-        <Navigation />
-        <AsyncSelect
-          backspaceRemovesValue={true}
-          cacheOptions
-          className="mb-3"
-          defaultOptions={breeds}
-          escapeClearsValue={true}
-          getOptionValue={(option) => option.id}
-          getOptionLabel={(option) => option.name}
-          isClearable={true}
-          isLoading={loading}
-          loadOptions={loadOptions}
-          options={breeds}
-          onChange={handleInputChange}
-          placeholder={'Breeds'}
-        />
-        {loading && <Spinner />}
-        {cats && <Cats cats={cats} loading={loading} />}
-      </Container>
-    </div>
+    <CatState>
+      <Router>
+        <div className="App">
+          <Container>
+            <Navigation />
+            <Switch>
+              <Route exact path="/" component={Home} />
+              <Route exact path="/about" component={About} />
+              <Route
+                exact
+                path="/cat/:id"
+                render={(props) => <Cat {...props} />}
+              />
+              <Route component={NotFound} />
+            </Switch>
+          </Container>
+        </div>
+      </Router>
+    </CatState>
   );
 };
 

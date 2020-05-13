@@ -1,9 +1,24 @@
 .avatar {
   background-size: cover;
+  width: 180px;
+  height: 180px;
   background-position: 50%;
   border: 2px solid #f0f1f5;
 }
 
 .card {
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+}
+
+.navbar-nav a:first-child {
+  margin-right: 1rem;
+}
+
+.infinite-scroll-component {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.w-100 {
+  width: 100%;
 }

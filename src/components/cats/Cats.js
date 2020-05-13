@@ -1,22 +1,39 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Row, Col } from 'react-bootstrap';
-import PropTypes from 'prop-types';
+import InfiniteScroll from 'react-infinite-scroll-component';
 import CatItem from './CatItem';
+import CatContext from '../../context/cat/catContext';
+import Spinner from '../layout/Spinner';
 
-const Cats = ({ cats: { data } }) => {
+const Cats = () => {
+  const { cats, getCats, limit } = useContext(CatContext);
+
   return (
-    <Row>
-      {data.map((cat) => (
-        <Col key={cat.id} className="col-md-3 col-sm-6 col-12">
-          <CatItem key={cat.id} cat={cat} />
-        </Col>
-      ))}
+    <Row className="text-center mx-auto d-block">
+      <InfiniteScroll
+        dataLength={cats.length}
+        next={getCats}
+        hasMore={cats.length <= limit && cats.length !== 0}
+        loader={<Spinner />}
+        endMessage={
+          <Col>
+            <p className="text-center">
+              {cats.length === 0
+                ? 'Start browsing for cats!'
+                : 'No more cats to load'}
+            </p>
+          </Col>
+        }
+        scrollThreshold={1}
+      >
+        {cats.map((cat) => (
+          <Col key={cat.id} className="col-lg-3 col-md-4 col-sm-6 col-12">
+            <CatItem cat={cat} />
+          </Col>
+        ))}
+      </InfiniteScroll>
     </Row>
   );
-};
-
-Cats.propTypes = {
-  cats: PropTypes.object.isRequired,
 };
 
 export default Cats;
