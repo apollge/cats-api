@@ -4,14 +4,14 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import './App.css';
 import About from './components/pages/About';
 import Cat from './components/cats/Cat';
-import CatState from './context/cat/CatState';
+import { CatProvider } from './context/cat/CatState';
 import Home from './components/pages/Home';
 import Navigation from './components/layout/Navigation';
 import NotFound from './components/pages/NotFound';
 
 const App = () => {
   return (
-    <CatState>
+    <CatProvider>
       <Router>
         <div className="App">
           <Container>
@@ -29,7 +29,7 @@ const App = () => {
           </Container>
         </div>
       </Router>
-    </CatState>
+    </CatProvider>
   );
 };
 

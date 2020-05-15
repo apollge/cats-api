@@ -1,7 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react';
-import AsyncSelect from 'react-select/async';
 import debounce from 'lodash/debounce';
-import CatContext from '../../context/cat/catContext';
+import React, { useContext, useEffect } from 'react';
+import AsyncSelect from 'react-select/async';
+import { CatContext } from '../../context/cat/CatState';
 
 const Search = () => {
   const { breeds, loading, getBreeds, getCats, reset } = useContext(CatContext);
@@ -27,7 +27,9 @@ const Search = () => {
   }, 420);
 
   useEffect(() => {
-    getBreeds();
+    if (!breeds.length) {
+      getBreeds();
+    }
   }, []);
 
   return (

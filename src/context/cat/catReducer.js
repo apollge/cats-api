@@ -4,7 +4,6 @@ import {
   GET_CAT,
   GET_CATS,
   RESET,
-  SET_BREED_ID,
   SET_LOADING,
 } from '../types';
 
@@ -34,29 +33,17 @@ export default (state, action) => {
     case GET_CATS:
       return {
         ...state,
-        cats:
-          state.breedId !== action.payload.currentBreedId
-            ? action.payload.catBreeds
-            : state.cats.concat(action.payload.catBreeds),
+        breedId: action.payload.breedId,
+        cats: state.cats.concat(action.payload.catBreeds),
         loading: false,
-      };
-
-    case SET_BREED_ID:
-      return {
-        ...state,
-        breedId: action.payload,
+        page: state.page + 1,
       };
 
     case RESET:
       return {
         ...state,
         breedId: '',
-        cat: [],
         cats: [],
-        catNotFound: false,
-        limit: 12,
-        loading: false,
-        page: 1,
       };
 
     case SET_LOADING:

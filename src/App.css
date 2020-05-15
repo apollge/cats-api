@@ -14,11 +14,6 @@
   margin-right: 1rem;
 }
 
-.infinite-scroll-component {
-  display: flex;
-  flex-wrap: wrap;
-}
-
 .w-100 {
   width: 100%;
 }

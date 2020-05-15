@@ -1,19 +1,18 @@
-import React, { useReducer } from 'react';
+import React, { createContext, useReducer } from 'react';
 import axios from 'axios';
-import CatContext from './catContext';
 import CatReducer from './catReducer';
 import {
   CAT_NOT_FOUND,
   GET_BREEDS,
   GET_CAT,
   GET_CATS,
-  SET_BREED_ID,
   SET_LOADING,
   RESET,
 } from '../types';
 
 const initialState = {
   breedId: '',
+  breeds: {},
   cat: [],
   cats: [],
   catNotFound: false,
@@ -22,9 +21,9 @@ const initialState = {
   page: 1,
 };
 
-let pageCtr = initialState.page;
+export const CatContext = createContext(initialState);
 
-const CatState = (props) => {
+export const CatProvider = (props) => {
   const [state, dispatch] = useReducer(CatReducer, initialState);
 
   // Get Breeds
@@ -66,34 +65,29 @@ const CatState = (props) => {
     setLoading();
 
     if (inputValue) {
-      dispatch({
-        type: SET_BREED_ID,
-        payload: inputValue.id,
-      });
+      state.breedId = inputValue.id;
     }
 
-    let currentBreedId = inputValue.id || state.breedId;
-
     const res = await axios.get(
-      `https://api.thecatapi.com/v1/images/search?page=${
-        inputValue ? pageCtr : ++pageCtr
-      }&limit=${state.limit}&breed_id=${currentBreedId}`
+      `https://api.thecatapi.com/v1/images/search?page=${state.page}&limit=${state.limit}&breed_id=${state.breedId}`
     );
 
     let catBreeds = res.data;
 
     dispatch({
       type: GET_CATS,
-      payload: { currentBreedId, catBreeds },
+      payload: {
+        breedId: state.breedId,
+        catBreeds,
+      },
     });
   };
 
   const reset = () => {
-    pageCtr = initialState.page;
+    state.page = initialState.page;
 
     dispatch({
       type: RESET,
-      payload: initialState,
     });
   };
 
@@ -114,5 +108,3 @@ const CatState = (props) => {
     </CatContext.Provider>
   );
 };
-
-export default CatState;
